@@ -98,6 +98,7 @@ Sau khi cài đặt thành công:
 ### 🧠 Smart Path Management
 - ✅ Tự động tìm `adbw_port` ở nhiều vị trí
 - ✅ Không phụ thuộc working directory
+- ✅ Smart DEX file resolution (không copy không cần thiết)
 - ✅ Robust path resolution
 
 ### 🔍 Advanced Debugging

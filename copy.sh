@@ -216,24 +216,38 @@ else
 fi
 EOF
 
-# Set the dex location
-dex="${HOME}/rish_shizuku.dex"
+# Use the original dex location (no copy needed)
+dex="${DEX}"
 
-# Create enhanced Rish script
+# Create enhanced Rish script  
 log "Tạo script Rish..."
 tee "${BIN}/rish" > /dev/null << EOF
 #!/data/data/com.termux/files/usr/bin/bash
 
-# Check if dex file exists
-if [ ! -f "${dex}" ]; then
-    echo -e "\033[0;31mERROR: Không tìm thấy file rish_shizuku.dex tại: ${dex}\033[0m" >&2
-    echo -e "\033[1;33mVui lòng chạy lại script cài đặt: copy.sh\033[0m" >&2
-    exit 1
-fi
+# Define possible dex locations
+DEX_LOCATIONS=(
+    "${dex}"
+    "\${HOME}/rish_shizuku.dex"
+    "\${HOME}/shizuku-autostart/rish_shizuku.dex"
+    "/data/data/com.termux/files/home/shizuku-autostart/rish_shizuku.dex"
+)
 
-# Check if dex file is readable
-if [ ! -r "${dex}" ]; then
-    echo -e "\033[0;31mERROR: Không thể đọc file: ${dex}\033[0m" >&2
+# Find the dex file
+FOUND_DEX=""
+for dex_path in "\${DEX_LOCATIONS[@]}"; do
+    if [ -f "\$dex_path" ] && [ -r "\$dex_path" ]; then
+        FOUND_DEX="\$dex_path"
+        break
+    fi
+done
+
+if [ -z "\$FOUND_DEX" ]; then
+    echo -e "\033[0;31mERROR: Không tìm thấy rish_shizuku.dex ở bất kỳ vị trí nào!\033[0m" >&2
+    echo -e "\033[1;33mCác vị trí đã kiểm tra:\033[0m" >&2
+    for dex_path in "\${DEX_LOCATIONS[@]}"; do
+        echo -e "  - \$dex_path" >&2
+    done
+    echo -e "\033[1;33mVui lòng chạy lại script cài đặt: copy.sh\033[0m" >&2
     exit 1
 fi
 
@@ -241,7 +255,7 @@ fi
 [ -z "\$RISH_APPLICATION_ID" ] && export RISH_APPLICATION_ID="com.termux"
 
 # Run rish with proper error handling
-exec /system/bin/app_process -Djava.class.path="${dex}" /system/bin --nice-name=rish rikka.shizuku.shell.ShizukuShellLoader "\${@}"
+exec /system/bin/app_process -Djava.class.path="\$FOUND_DEX" /system/bin --nice-name=rish rikka.shizuku.shell.ShizukuShellLoader "\${@}"
 EOF
 
 # Give execution permissions
@@ -251,28 +265,20 @@ if ! chmod +x "${BIN}/shizuku" "${BIN}/rish"; then
     exit 1
 fi
 
-# Copy dex file
-log "Đang copy file DEX..."
-if ! cp -f "${DEX}" "${dex}"; then
-    error "Không thể copy file DEX"
-    exit 1
-fi
-
-# Remove write permission from dex (required for app_process)
-log "Đang thiết lập quyền cho file DEX..."
-if ! chmod -w "${dex}"; then
-    error "Không thể thiết lập quyền cho file DEX"
-    exit 1
+# Set proper permissions for original dex file (required for app_process)
+log "Đang thiết lập quyền cho file DEX gốc..."
+if ! chmod -w "${DEX}"; then
+    warn "Không thể thiết lập quyền cho file DEX (có thể không ảnh hưởng)"
 fi
 
 # Final verification
 log "Đang kiểm tra cài đặt..."
-if [ -x "${BIN}/shizuku" ] && [ -x "${BIN}/rish" ] && [ -r "${dex}" ]; then
+if [ -x "${BIN}/shizuku" ] && [ -x "${BIN}/rish" ] && [ -r "${DEX}" ]; then
     success "Cài đặt hoàn tất thành công!"
     echo
     log "Các lệnh đã được tạo:"
     echo "  - shizuku: Script khởi động Shizuku"
-    echo "  - rish: Shell tool qua Shizuku"
+    echo "  - rish: Shell tool qua Shizuku (sử dụng DEX từ: ${DEX})"
     echo
     if [ "$TERMUX_RESTART_NEEDED" = true ]; then
         warn "⚠️  VUI LÒNG RESTART TERMUX APP để allow-external-apps có hiệu lực!"
