@@ -205,9 +205,9 @@ if adb -s "$device" shell "$lib_path" >/dev/null 2>&1; then
     fi
     
     # Tắt wireless debugging
-    echo -e "${BLUE}[THÔNG TIN]${NC} Đang tắt wireless debugging..."
-    adb -s "$device" shell settings put global adb_wifi_enabled 0 2>/dev/null
-    echo -e "${GREEN}[THÀNH CÔNG]${NC} Đã tắt wireless debugging"
+    #echo -e "${BLUE}[THÔNG TIN]${NC} Đang tắt wireless debugging..."
+    #adb -s "$device" shell settings put global adb_wifi_enabled 0 2>/dev/null
+    #echo -e "${GREEN}[THÀNH CÔNG]${NC} Đã tắt wireless debugging"
     
     exit 0
 else
