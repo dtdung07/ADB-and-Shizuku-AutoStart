@@ -25,7 +25,7 @@ ADB-and-Shizuku-AutoStart/
 
 ## ⚠️ File quan trọng thiếu
 
-**`rish_shizuku.dex`** cần được tải từ: https://github.com/Mirai0009/Get-Url-via-Shizuku-Termux
+**`rish_shizuku.dex`** cần được export thủ công từ ứng dụng Shizuku ra bộ nhớ ngoài của điện thoại.
 
 ## 🚀 Hướng dẫn cài đặt
 
