@@ -118,7 +118,7 @@ Sau khi cài đặt thành công:
 
 **❌ "Không tìm thấy rish_shizuku.dex"**
 ```bash
-# Tải file từ GitHub và đặt cùng thư mục với copy.sh
+# Export file từ app Shizuku và đặt cùng thư mục với copy.sh
 ```
 
 **❌ "Không tìm thấy IP hoặc port"**
@@ -157,7 +157,7 @@ rm -f $PREFIX/bin/shizuku $PREFIX/bin/rish ~/rish_shizuku.dex
 
 - **Shizuku GitHub**: https://github.com/RikkaApps/Shizuku
 - **Hướng dẫn thiết lập**: https://github.com/RikkaApps/Shizuku/discussions/462
-- **rish_shizuku.dex**: https://github.com/Mirai0009/Get-Url-via-Shizuku-Termux
+- **rish_shizuku.dex**
 
 ## 💡 Cách hoạt động
 
